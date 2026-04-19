@@ -14,8 +14,14 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors({ origin: ['http://localhost:3000'], credentials: true }));
+// CORS: localhost for dev; add CLIENT_ORIGINS (comma-separated) for Vercel/production frontends
+const defaultOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+const extraOrigins = (process.env.CLIENT_ORIGINS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+const corsOrigins = [...new Set([...defaultOrigins, ...extraOrigins])];
+app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json());
 
 // Routes

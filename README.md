@@ -100,6 +100,22 @@ npm start
 
 Frontend runs at `http://localhost:3000` and proxies API to `http://localhost:5000`.
 
+### 4. Deployment Environment Variables
+
+If the frontend is deployed separately from the backend (for example, Vercel + Render), set these variables before deploying:
+
+Frontend (`client` / Vercel build):
+```bash
+REACT_APP_API_URL=https://mental-health-outcome-analysis-backend-3.onrender.com
+```
+
+Backend (`server` / Render):
+```bash
+CLIENT_ORIGINS=https://your-frontend-domain.vercel.app
+```
+
+Important: `REACT_APP_API_URL` is baked into the React build, so after changing it you must redeploy the frontend. If it is missing in production, requests may go to the frontend host's `/api/...` path and fail with `405 Method Not Allowed`.
+
 ## API Endpoints
 
 | Method | Endpoint | Access |
