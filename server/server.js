@@ -19,8 +19,27 @@ const extraOrigins = (process.env.CLIENT_ORIGINS || '')
   .map((s) => s.trim())
   .filter(Boolean);
 const corsOrigins = [...new Set([...defaultOrigins, ...extraOrigins])];
+const allowedVercelPreviewPattern =
+  /^https:\/\/mental-health-outcome-analysis-1p56(?:-[a-z0-9]+)?\.vercel\.app$/;
 
-app.use(cors({ origin: corsOrigins, credentials: true }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow server-to-server requests and local tools that don't send Origin.
+      if (!origin) return callback(null, true);
+
+      if (
+        corsOrigins.includes(origin) ||
+        allowedVercelPreviewPattern.test(origin)
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Routes
