@@ -12,7 +12,6 @@ const userAssessmentSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
       unique: true,
-      index: true,
     },
     questionIds: [
       {
@@ -27,7 +26,5 @@ const userAssessmentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-userAssessmentSchema.index({ user: 1 });
 
 module.exports = mongoose.model('UserAssessment', userAssessmentSchema);
